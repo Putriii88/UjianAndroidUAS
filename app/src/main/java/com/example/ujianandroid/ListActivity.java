@@ -5,8 +5,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
+
+import com.google.android.material.transition.VisibilityAnimatorProvider;
 
 import java.util.ArrayList;
 
@@ -17,17 +23,52 @@ public class ListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
 
-        ListView lvNama = (ListView) findViewById(R.id.lvNama);
+        EditText edNamaDepan = findViewById(R.id.edNamaDepan);
+        EditText edNamaBelakang = findViewById(R.id.edNamaBelakang);
+        EditText edUmur = findViewById(R.id.edUmur);
+        Button btnSimpan = findViewById(R.id.btnSimpan);
 
-        ArrayList<String> daftar_nama = getIntent().getExtras().getStringArrayList("daftar_nama");
 
-        if(daftar_nama.isEmpty()){
-            daftar_nama.add("data masih kosong");
+        ArrayList<String> daftar_nama = new ArrayList<>();
+
+        btnSimpan.setOnEditorActionListener(new view.OnClickListener(){ @Override
+            public void onClick(View view){
+                String isian_nama_depan = edNamaDepan.getText().toString();
+                String isian_nama_belakang = edNamaBelakang.getText().toString();
+                String isian_umur = edUmur.getText().toString();
         }
 
-        ArrayAdapter<String> ad_nama = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, daftar_nama);
+        if(isian_nama_depan.isEmpty()|| isian_umur.isEmpty());
 
-        lvNama.setAdapter(ad_nama);
+            {
+                Toast.makeText(getApplicationContext(), "isian masih kosong", Toast.LENGTH_SHORT).show();
+            }
+        else {
+            int umur = Integer.parselnt(isian_umur);
+            String kategori_umur = getKategoriUmur(umur);
 
+            String nama_lengkap = isian_nama_depan.concat("").concat(isian_nama_belakang);
+            daftar_nama.clear();
+
+            // Menambahkan informasi urutan, nama, umur,dan status
+                for (int i = 1; i <=umur, i++) {
+                    daftar_nama.add(i +"." +nama_lengkap+ "-Status:" +kategori_umur);
+                }
+            }
+            edNamaDepan.setText("");
+            edNamaBelakang.setText("");
+            edUmur.setText("");
+            intent_list.putStringArrayListExtra("daftar_nama",daftar_nama);
+            starActivity(intent_list);
+
+
+
+private String getKategoriUmur(int umur) {
+    if (umur < 10) {
+        return "Anak";
+    } else if (umur < 20){
+        return "Remaja";
+    } else if (umur < 40) {
+        return "Orang Tua";
     }
 }
